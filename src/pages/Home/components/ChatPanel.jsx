@@ -39,7 +39,8 @@ export default function ChatPanel({
     const pct = Math.round((members.length / maxMembers) * 100);
     const { mutate: handleSendMessage } = useSendMessage()
     const queryClient = useQueryClient();
-    const { user } = queryClient.getQueryData(['auth'])
+    const data = queryClient.getQueryData(['auth'])
+    const user = data?.user || {};
     const { data: messages = [] } = useNewMessages(room?._id)
     // ── Chat messages state ────────────────────────────────────────────────
     const [inputValue, setInputValue] = useState("");
@@ -64,7 +65,7 @@ export default function ChatPanel({
         }
     };
 
-    const handleLeaveRoom = ()=>{
+    const handleLeaveRoom = () => {
         onLeave(room)
     }
 
