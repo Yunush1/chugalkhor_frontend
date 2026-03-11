@@ -30,7 +30,7 @@ export function SocketProvider({ children }) {
             console.warn("No token found in sessionStorage → socket not connecting");
             return;
         }
-
+        console.log(import.meta.env.VITE_SOCKET_BASE_URL)
         const newSocket = io(import.meta.env.VITE_SOCKET_BASE_URL, {
             auth: { accessToken: token },
             autoConnect: true,
