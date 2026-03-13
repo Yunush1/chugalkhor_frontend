@@ -41,7 +41,7 @@ export default function ChatPanel({
     const queryClient = useQueryClient();
     const data = queryClient.getQueryData(['auth'])
     const user = data?.user || {};
-    const { data: messages = [] } = useNewMessages(room?._id)
+    const { data: messages = [] } = useNewMessages(room?._id || '')
     // ── Chat messages state ────────────────────────────────────────────────
     const [inputValue, setInputValue] = useState("");
     const messagesEndRef = useRef(null);
