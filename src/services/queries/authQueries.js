@@ -48,7 +48,7 @@ export const useValidateToken = () => {
         queryKey: ["auth"],
         queryFn: validateToken,
         retry: false,
-        enabled: false, // ❗ prevent auto call
+        enabled: true, // ❗ prevent auto call
 
         select: (res) => {
             return {

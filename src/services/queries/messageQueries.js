@@ -17,19 +17,24 @@ export const useNewMessages = (roomId) => {
         staleTime: Infinity,
     });
 
-    /**
-     * Listen for incoming messages
-     */
     useEffect(() => {
         if (!socket) return;
-        const handleNewMessage = (payload) => {
-            const { message } = payload;
-            const { roomId } = message;
-            queryClient.setQueryData(["messages", roomId], (old = []) => {
-                const exists = old.find((m) => m._id === message._id);
-                if (exists) return old;
 
-                return [...old, message];
+        const handleNewMessage = (payload) => {
+            if (!payload?.message) return;
+
+            const message = payload.message;
+
+            if (!message?.roomId || !message?._id) return;
+
+            queryClient.setQueryData(["messages", message.roomId], (old = []) => {
+                const safeOld = Array.isArray(old) ? old : [];
+
+                const exists = safeOld.find((m) => m?._id === message._id);
+
+                if (exists) return safeOld;
+
+                return [...safeOld, message];
             });
         };
 

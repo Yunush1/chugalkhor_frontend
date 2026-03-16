@@ -33,15 +33,20 @@ export default function ChatPanel({
         createdBy = "",
         createdAt,
         members = [],
-        maxMembers,
-    } = room;
+        maxMembers = 0,
+    } = room || {};
 
-    const pct = Math.round((members.length / maxMembers) * 100);
+    const [ready, setReady] = useState(false);
+    const pct = maxMembers ? Math.round((members.length / maxMembers) * 100) : 0;
     const { mutate: handleSendMessage } = useSendMessage()
     const queryClient = useQueryClient();
     const data = queryClient.getQueryData(['auth'])
-    const user = data?.user || {};
-    const { data: messages = [] } = useNewMessages(room?._id || '')
+    const user = data?.user || { _id: 'cdscd' };
+    const roomId = room?._id || "";
+
+    const { data: messages = [] } = useNewMessages(roomId, {
+        enabled: !!roomId
+    });
     // ── Chat messages state ────────────────────────────────────────────────
     const [inputValue, setInputValue] = useState("");
     const messagesEndRef = useRef(null);
@@ -69,6 +74,14 @@ export default function ChatPanel({
         onLeave(room)
     }
 
+    if (!room || !room._id) {
+        return (
+            <div style={S.chatPanel}>
+                <div style={{ padding: 20 }}>Loading room...</div>
+            </div>
+        );
+    }
+
     return (
         <div style={S.chatPanel}>
             {/* Header */}
@@ -79,10 +92,10 @@ export default function ChatPanel({
                     </button>
                 )}
                 <Avatar name={name} size={40} />
-                <div style={{ flex: 1, minWidth: 0 }} onClick={() => openUserModal(room)}>
-                    <div style={S.chatName}>{name}</div>
+                <div style={{ flex: 1, minWidth: 0 }} onClick={() => openUserModal(room || { _id: '12' })}>
+                    <div style={S.chatName}>{name || 'Room'}</div>
                     <div style={S.chatSub}>
-                        {members.length} of {maxMembers} members
+                        {members?.length || 0} of {maxMembers || 0} members
                     </div>
                 </div>
                 <IconBtn>
@@ -118,10 +131,10 @@ export default function ChatPanel({
                                 gap: 10,
                             }}
                         >
-                            <InfoCell label="Created by" val={`User ${createdBy.slice(-6)}`} />
+                            <InfoCell label="Created by" val={`User ${(createdBy || "").slice(-6)}`} />
                             <InfoCell
                                 label="Members"
-                                val={`${members.length} / ${maxMembers}`}
+                                val={`${members.length || 0} / ${maxMembers || 0}`}
                             />
                         </div>
 
@@ -187,12 +200,11 @@ export default function ChatPanel({
                 {/* <div className="flex flex-col px-2 py-3 overflow-y-auto h-full"> */}
                 {messages.map((msg) => {
                     const isOwn =
-                        (typeof msg.sender === 'string' && msg.sender === 'me') ||
-                        (msg.sender && typeof msg.sender !== 'string' && msg.sender._id === user?._id);
-
+                        msg?.sender === "me" ||
+                        msg?.sender?._id === user?._id;
                     return (
                         <MessageBubble
-                            key={msg._id || msg.id || Math.random().toString(36).slice(2)}
+                            key={msg._id || msg.id}
                             message={msg}
                             isOwnMessage={isOwn}
                         />
@@ -234,12 +246,14 @@ export default function ChatPanel({
 
 // ─── Date Helpers ────────────────────────────────────────────────────────────
 const fullDate = (d) =>
-    new Date(d).toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    });
+    d
+        ? new Date(d).toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        })
+        : "";
 
 const shortTime = (d) =>
     new Date(d).toLocaleTimeString("en-US", {

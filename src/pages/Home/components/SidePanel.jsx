@@ -18,7 +18,7 @@ const searchBoxStyle = {
 };
 
 export default function SidePanel({
-  rooms,
+  rooms = [],
   activeRoom,
   onSelect,
   search,
@@ -62,22 +62,24 @@ export default function SidePanel({
             title="Error"
             sub={error?.message || "Failed to load rooms"}
           />
-        ) : rooms.length === 0 ? (
+        ) : !rooms || rooms.length === 0 ? (
           <EmptyState
             icon="🏠"
             title="No rooms nearby"
             sub="There are no active rooms in your area right now."
           />
         ) : (
-          rooms.map(room => (
-            <RoomRow
-              key={room._id}
-              data={room}
-              isActive={activeRoom?._id === room._id}
-              isJoined={joined}
-              onClick={() => onSelect(room)}
-            />
-          ))
+          rooms
+            .filter(room => room?._id)
+            .map((room) => (
+              <RoomRow
+                key={room._id}
+                data={room}
+                isActive={activeRoom?._id === room._id}
+                isJoined={joined}
+                onClick={() => onSelect(room)}
+              />
+            ))
         )}
       </div>
     </div>
