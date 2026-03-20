@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useCreateRoom, useJoinInAndLeaveRooms, useNearbyRooms } from "../../services/queries/roomQueries"
-
+import WaveCallClient from 'wavecall-client'
 import useIsMobile from "./hooks/useIsMobile";
 
 import SidePanel from "./components/SidePanel";
@@ -147,6 +147,7 @@ export default function Home() {
             isMobile
           />
         )}
+        
         <FloatButton
           shape="square"
           type="primary"
