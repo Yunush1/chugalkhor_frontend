@@ -28,7 +28,7 @@ const LeavRoom = ({
         danger: true,           // makes the button red (destructive action)
       }}
       centered                     // modern centered look
-      maskClosable={false}         // prevent close on backdrop click (optional)
+      mask={{ closable: false }}   // prevent close on backdrop click (optional)
       width={420}                  // reasonable width for confirmation
     >
       <p className="text-gray-600 mt-4">{message}</p>

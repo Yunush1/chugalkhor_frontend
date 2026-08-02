@@ -1,7 +1,12 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import wavecall  from "wavecall-client";
+import WaveCallClientModule from "wavecall-client";
 import { useSocket } from "../../../services/socket/SocketProvider";
-const WaveCallClient = wavecall.WaveCallSignaling || wavecall.default?.WaveCallSignaling;
+
+const WaveCallClient =
+    WaveCallClientModule?.WaveCallClient ??
+    WaveCallClientModule?.default?.WaveCallClient ??
+    WaveCallClientModule?.default ??
+    WaveCallClientModule;
 /**
  * useWaveCall
  * Thin React wrapper around wavecall-client WaveCallClient.

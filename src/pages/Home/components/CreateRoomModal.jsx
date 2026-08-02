@@ -3,9 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { Button, Modal, Form, Input, InputNumber, DatePicker, message, Typography, Row, Col } from 'antd';
 
 
-
-
-
 const CreateRoomModal = ({
   open,
   onClose,
@@ -84,7 +81,7 @@ const CreateRoomModal = ({
       footer={null}
       width={520}
       centered
-      maskClosable={!loading}
+      mask={{ closable: !loading }}
       closable={!loading}
       classNames={{
         content: "rounded-xl overflow-hidden border border-gray-200",

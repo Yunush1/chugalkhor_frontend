@@ -48,7 +48,7 @@ export default function ChugalaKhorModal({
             footer={null}
             width={480}
             centered
-            destroyOnClose
+            destroyOnHidden
             className="[&_.ant-modal-body]:p-0"
         >
             {isLoading ? (
